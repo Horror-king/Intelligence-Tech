@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat and Teach</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2 {
+            color: #4CAF50;
+        }
+
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        p {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        #response, #teachStatus {
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat with AI</h1>
+    
+    <!-- Chat Section -->
+    <input type="text" id="prompt" placeholder="Ask something...">
+    <button onclick="askAI()">Ask</button>
+    <p id="response"></p>
+
+    <h2>Teach the AI</h2>
+    
+    <!-- Teach Section -->
+    <input type="text" id="teachPrompt" placeholder="Teach prompt...">
+    <input type="text" id="teachResponse" placeholder="Teach response...">
+    <button onclick="teachAI()">Teach</button>
+    <p id="teachStatus"></p>
+
+    <script>
+        function askAI() {
+            const prompt = document.getElementById('prompt').value;
+            fetch(`/ai?prompt=${encodeURIComponent(prompt)}`)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('response').innerText = data;
+                });
+        }
+
+        function teachAI() {
+            const prompt = document.getElementById('teachPrompt').value;
+            const response = document.getElementById('teachResponse').value;
+            
+            fetch('/teach', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ prompt, response }),
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('teachStatus').innerText = data;
+            });
+        }
+    </script>
+</body>
+</html>
